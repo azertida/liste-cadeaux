@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎄 Mes Cadeaux de Noël</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #FFD93D 0%, #FFA500 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .budget-summary {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .budget-item {
+            text-align: center;
+        }
+
+        .budget-label {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .budget-amount {
+            font-size: 2em;
+            font-weight: bold;
+            color: #1a1a1a;
+        }
+
+        .budget-bought {
+            color: #27ae60;
+        }
+
+        .add-person-btn {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+            display: block;
+            margin: 0 auto 10px;
+        }
+
+        .add-person-btn:hover {
+            background: #229954;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+
+        .warning-box {
+            background: #fff9e6;
+            border-left: 4px solid #ffc107;
+            border-radius: 5px;
+            padding: 12px 20px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .warning-icon {
+            font-size: 1.2em;
+            flex-shrink: 0;
+        }
+
+        .warning-text {
+            color: #6b5d00;
+            font-size: 0.95em;
+            line-height: 1.4;
+        }
+
+        .warning-text strong {
+            color: #1a1a1a;
+            font-weight: 600;
+        }
+
+        .persons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+            margin-top: 10px;
+            margin-bottom: 30px;
+        }
+
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 20px;
+            color: white;
+            font-size: 1.2em;
+        }
+
+        .person-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
+        }
+
+        .person-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .person-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .person-name {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #1f2937;
+        }
+
+        .person-total {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #1a1a1a;
+        }
+
+        .delete-person-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            margin-left: 10px;
+        }
+
+        .delete-person-btn:hover {
+            background: #dc2626;
+        }
+
+        .gift-list {
+            margin-bottom: 15px;
+        }
+
+        .gift-item {
+            background: #f9fafb;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .gift-info {
+            flex: 1;
+        }
+
+        .gift-description {
+            font-weight: 500;
+            color: #1f2937;
+            margin-bottom: 5px;
+        }
+
+        .gift-price {
+            color: #1a1a1a;
+            font-weight: bold;
+        }
+
+        .gift-status {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .status-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .status-not-bought {
+            background: #FFD93D;
+            color: #1a1a1a;
+            border: 2px solid #1a1a1a;
+        }
+
+        .status-not-bought:hover {
+            background: #FFC107;
+        }
+
+        .status-bought {
+            background: #27ae60;
+            color: white;
+            border: 2px solid #229954;
+        }
+
+        .status-bought:hover {
+            background: #229954;
+        }
+
+        .delete-gift-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.85em;
+        }
+
+        .delete-gift-btn:hover {
+            background: #dc2626;
+        }
+
+        .add-gift-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .add-gift-form input {
+            padding: 10px;
+            border: 2px solid #e5e7eb;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+
+        .add-gift-form input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .add-gift-btn {
+            background: #FFD93D;
+            color: #1a1a1a;
+            border: 2px solid #1a1a1a;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+        }
+
+        .add-gift-btn:hover {
+            background: #FFC107;
+        }
+
+        .new-person-form {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+            display: none;
+        }
+
+        .new-person-form.active {
+            display: block;
+        }
+
+        .new-person-form input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 5px;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+        }
+
+        .new-person-form input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .form-buttons button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .save-person-btn {
+            background: #27ae60;
+            color: white;
+        }
+
+        .save-person-btn:hover {
+            background: #229954;
+        }
+
+        .cancel-btn {
+            background: #9ca3af;
+            color: white;
+        }
+
+        .cancel-btn:hover {
+            background: #6b7280;
+        }
+
+        .backup-section {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .backup-section h3 {
+            margin-bottom: 15px;
+            color: #1f2937;
+        }
+
+        .backup-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .backup-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .export-btn {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .export-btn:hover {
+            background: #2563eb;
+        }
+
+        .import-btn {
+            background: #8b5cf6;
+            color: white;
+        }
+
+        .import-btn:hover {
+            background: #7c3aed;
+        }
+
+        #importFile {
+            display: none;
+        }
+    </style>
+    <!-- Icônes et métadonnées PWA -->
+    <link rel="icon" type="image/png" href="icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="icon.png">
+    <meta name="theme-color" content="#FFD93D">
+    <meta name="description" content="Notez vos idées de cadeaux et suivez votre budget">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Mes Cadeaux">
+    </head>
+<body>
+    <div class="container">
+        <header>
+            <img src="sapin.webp" width="400" height="303" alt="Sapin de Noël" style="max-width: 200px; height: auto; margin-bottom: 15px; border-radius: 15px; box-shadow: 0 8px 16px rgba(0,0,0,0.3);">
+            <h1>🎁 Mes Cadeaux de Noël 🎁</h1>
+        </header>
+
+        <div class="budget-summary">
+            <div class="budget-item">
+                <div class="budget-label">Budget Total</div>
+                <div class="budget-amount" id="totalBudget">0€</div>
+            </div>
+            <div class="budget-item">
+                <div class="budget-label">Déjà Acheté</div>
+                <div class="budget-amount budget-bought" id="boughtBudget">0€</div>
+            </div>
+            <div class="budget-item">
+                <div class="budget-label">Reste à Acheter</div>
+                <div class="budget-amount" id="remainingBudget">0€</div>
+            </div>
+        </div>
+
+        <div class="warning-box">
+            <div class="warning-text">
+                <strong>Attention :</strong> Vos données sont dans votre navigateur. Pensez à les télécharger régulièrement (bouton en bas) !
+            </div>
+        </div>
+
+        <button class="add-person-btn" onclick="showNewPersonForm()">+ Ajouter une personne</button>
+
+        <div class="new-person-form" id="newPersonForm">
+            <input type="text" id="newPersonName" placeholder="Prénom de la personne" />
+            <div class="form-buttons">
+                <button class="save-person-btn" onclick="addPerson()">Ajouter</button>
+                <button class="cancel-btn" onclick="hideNewPersonForm()">Annuler</button>
+            </div>
+        </div>
+
+        <div class="persons-grid" id="personsGrid">
+            <div class="empty-state">
+                Cliquez sur "Ajouter une personne" pour commencer !
+            </div>
+        </div>
+
+        <div class="backup-section">
+            <h3>💾 Sauvegarder / Restaurer</h3>
+            <div class="backup-buttons">
+                <button class="backup-btn export-btn" onclick="shareData()">📤 Partager / Sauvegarder</button>
+                <button class="backup-btn import-btn" onclick="document.getElementById('importFile').click()">📥 Importer des données</button>
+                <input type="file" id="importFile" accept=".json" onchange="importData(event)" />
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let persons = [];
+
+        // Charger les données au démarrage
+        loadData();
+
+        function loadData() {
+            const saved = localStorage.getItem('cadeaux_persons');
+            if (saved) {
+                persons = JSON.parse(saved);
+                renderPersons();
+                updateBudgetSummary();
+            }
+        }
+
+        function saveData() {
+            localStorage.setItem('cadeaux_persons', JSON.stringify(persons));
+            updateBudgetSummary();
+        }
+
+        function showNewPersonForm() {
+            document.getElementById('newPersonForm').classList.add('active');
+            document.getElementById('newPersonName').focus();
+        }
+
+        function hideNewPersonForm() {
+            document.getElementById('newPersonForm').classList.remove('active');
+            document.getElementById('newPersonName').value = '';
+        }
+
+        function addPerson() {
+            const name = document.getElementById('newPersonName').value.trim();
+            if (name === '') {
+                alert('Veuillez entrer un prénom');
+                return;
+            }
+
+            persons.unshift({
+                id: Date.now(),
+                name: name,
+                gifts: []
+            });
+
+            saveData();
+            renderPersons();
+            hideNewPersonForm();
+        }
+
+        function deletePerson(personId) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer cette personne et tous ses cadeaux ?')) {
+                persons = persons.filter(p => p.id !== personId);
+                saveData();
+                renderPersons();
+            }
+        }
+
+        function addGift(personId) {
+            const description = document.getElementById(`giftDesc-${personId}`).value.trim();
+            const price = parseFloat(document.getElementById(`giftPrice-${personId}`).value) || 0;
+
+            if (description === '') {
+                alert('Veuillez entrer une description du cadeau');
+                return;
+            }
+
+            const person = persons.find(p => p.id === personId);
+            person.gifts.push({
+                id: Date.now(),
+                description: description,
+                price: price,
+                bought: false
+            });
+
+            document.getElementById(`giftDesc-${personId}`).value = '';
+            document.getElementById(`giftPrice-${personId}`).value = '';
+
+            saveData();
+            renderPersons();
+        }
+
+        function toggleGiftStatus(personId, giftId) {
+            const person = persons.find(p => p.id === personId);
+            const gift = person.gifts.find(g => g.id === giftId);
+            gift.bought = !gift.bought;
+
+            saveData();
+            renderPersons();
+        }
+
+        function deleteGift(personId, giftId) {
+            if (confirm('Supprimer cette idée de cadeau ?')) {
+                const person = persons.find(p => p.id === personId);
+                person.gifts = person.gifts.filter(g => g.id !== giftId);
+
+                saveData();
+                renderPersons();
+            }
+        }
+
+        function calculatePersonTotal(person) {
+            return person.gifts.reduce((sum, gift) => sum + gift.price, 0);
+        }
+
+        function updateBudgetSummary() {
+            let total = 0;
+            let bought = 0;
+
+            persons.forEach(person => {
+                person.gifts.forEach(gift => {
+                    total += gift.price;
+                    if (gift.bought) {
+                        bought += gift.price;
+                    }
+                });
+            });
+
+            document.getElementById('totalBudget').textContent = `${total.toFixed(2)}€`;
+            document.getElementById('boughtBudget').textContent = `${bought.toFixed(2)}€`;
+            document.getElementById('remainingBudget').textContent = `${(total - bought).toFixed(2)}€`;
+        }
+
+        function renderPersons() {
+            const grid = document.getElementById('personsGrid');
+            
+            if (persons.length === 0) {
+                grid.innerHTML = '<div class="empty-state">Cliquez sur "Ajouter une personne" pour commencer !</div>';
+                return;
+            }
+
+            grid.innerHTML = persons.map(person => {
+                const total = calculatePersonTotal(person);
+                
+                return `
+                    <div class="person-card">
+                        <div class="person-header">
+                            <div>
+                                <span class="person-name">👤 ${person.name}</span>
+                                <button class="delete-person-btn" onclick="deletePerson(${person.id})">🗑️ Supprimer</button>
+                            </div>
+                            <div class="person-total">${total.toFixed(2)}€</div>
+                        </div>
+
+                        <div class="gift-list">
+                            ${person.gifts.map(gift => `
+                                <div class="gift-item">
+                                    <div class="gift-info">
+                                        <div class="gift-description">${gift.description}</div>
+                                        <div class="gift-price">${gift.price.toFixed(2)}€</div>
+                                    </div>
+                                    <div class="gift-status">
+                                        <button class="status-btn ${gift.bought ? 'status-bought' : 'status-not-bought'}" 
+                                                onclick="toggleGiftStatus(${person.id}, ${gift.id})">
+                                            ${gift.bought ? '✓ Acheté' : '○ Pas acheté'}
+                                        </button>
+                                        <button class="delete-gift-btn" onclick="deleteGift(${person.id}, ${gift.id})">×</button>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+
+                        <div class="add-gift-form">
+                            <input type="text" id="giftDesc-${person.id}" placeholder="Idée de cadeau" />
+                            <input type="number" id="giftPrice-${person.id}" placeholder="Prix (€)" step="0.01" min="0" />
+                            <button class="add-gift-btn" onclick="addGift(${person.id})">+ Ajouter une idée</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            updateBudgetSummary();
+        }
+
+        function shareData() {
+            const dataStr = JSON.stringify(persons, null, 2);
+            const fileName = `cadeaux-noel-${new Date().toISOString().split('T')[0]}.json`;
+            
+            // Créer un blob avec les données
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            
+            // Vérifier si l'API Web Share est disponible (mobile)
+            if (navigator.share && navigator.canShare) {
+                // Créer un File object pour le partage
+                const file = new File([dataBlob], fileName, { type: 'application/json' });
+                
+                // Vérifier si on peut partager des fichiers
+                if (navigator.canShare({ files: [file] })) {
+                    navigator.share({
+                        files: [file],
+                        title: 'Mes cadeaux de Noël',
+                        text: 'Sauvegarde de ma liste de cadeaux'
+                    }).catch((error) => {
+                        // Si le partage échoue, on télécharge
+                        console.log('Partage annulé ou erreur:', error);
+                        downloadFile(dataBlob, fileName);
+                    });
+                } else {
+                    // Si on ne peut pas partager de fichiers, on télécharge
+                    downloadFile(dataBlob, fileName);
+                }
+            } else {
+                // Sur desktop ou navigateur sans Web Share API, on télécharge
+                downloadFile(dataBlob, fileName);
+            }
+        }
+        
+        function downloadFile(blob, fileName) {
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = fileName;
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    if (confirm('Voulez-vous remplacer vos données actuelles par les données importées ?')) {
+                        persons = imported;
+                        saveData();
+                        renderPersons();
+                        alert('Données importées avec succès !');
+                    }
+                } catch (error) {
+                    alert('Erreur lors de l\'importation des données. Fichier invalide.');
+                }
+            };
+            reader.readAsText(file);
+            
+            // Reset file input
+            event.target.value = '';
+        }
+
+        // Permettre d'ajouter une personne avec Enter
+        document.getElementById('newPersonName').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                addPerson();
+            }
+        });
+    </script>
+</body>
+</html>
