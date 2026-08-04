@@ -412,6 +412,7 @@
     <!-- Icônes et métadonnées PWA -->
     <link rel="icon" type="image/png" href="icon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="icon.png">
+<link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#FFD93D">
     <meta name="description" content="Notez vos idées de cadeaux et suivez votre budget">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -718,5 +719,15 @@
             }
         });
     </script>
+
+<script>
+/* Enregistrement du service worker (mode hors-ligne) */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./service-worker.js')
+      .catch(err => console.log('Service worker :', err));
+  });
+}
+</script>
 </body>
 </html>
